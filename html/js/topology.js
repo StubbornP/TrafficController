@@ -35,11 +35,11 @@ var elem = {
         .charge(CONF.force.charge)
         .linkDistance(CONF.force.dist)
         .on("tick", _tick),
-    svg: d3.select("body").append("svg")
+    svg: d3.select("#topo").append("svg")
         .attr("id", "topology")
         .attr("width", CONF.force.width)
         .attr("height", CONF.force.height),
-    console: d3.select("body").append("div")
+    console: d3.select("#topo").append("div")
         .attr("id", "console")
         .attr("width", CONF.force.width)
 };
@@ -59,7 +59,7 @@ function _tick() {
 elem.drag = elem.force.drag().on("dragstart", _dragstart);
 function _dragstart(d) {
     var dpid = dpid_to_int(d.dpid)
-    d3.json("/stats/flow/" + dpid, function(e, data) {
+    d3.json("/stats/flow/" + d.dpid, function(e, data) {
         flows = data[dpid];
         console.log(flows);
         elem.console.selectAll("ul").remove();
@@ -73,6 +73,7 @@ function _dragstart(d) {
 elem.node = elem.svg.selectAll(".node");
 elem.link = elem.svg.selectAll(".link");
 elem.port = elem.svg.selectAll(".port");
+
 elem.update = function () {
     this.force
         .nodes(topo.nodes)
@@ -88,7 +89,14 @@ elem.update = function () {
     this.node.exit().remove();
     var nodeEnter = this.node.enter().append("g")
         .attr("class", "node")
-        .on("dblclick", function(d) { d3.select(this).classed("fixed", d.fixed = false); })
+        .on("click",
+            function(d){
+                alert(d.dpid);
+            })
+        .on("dblclick",
+            function(d) {
+                d3.select(this).classed("fixed", d.fixed = false);
+            })
         .call(this.drag);
     nodeEnter.append("image")
         .attr("xlink:href", "./router.svg")
@@ -99,7 +107,7 @@ elem.update = function () {
     nodeEnter.append("text")
         .attr("dx", -CONF.image.width/2)
         .attr("dy", CONF.image.height-10)
-        .text(function(d) { return "dpid: " + trim_zero(d.dpid); });
+        .text(function(d) { return "ID: " + trim_zero(d.dpid); });
 
     var ports = topo.get_ports();
     this.port.remove();
