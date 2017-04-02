@@ -1,5 +1,30 @@
-#topology {  
-    border: 1px solid #000000;  
+#nav {
+    line-height:30px;
+    background-color:#eeeeee;
+    height:95px;
+    width:15%;
+    float:left;
+    padding:5px;
+}
+#stateTable {
+    width:95%;
+}
+#stateTableCaption{
+    font-family:黑体;
+    font-size: 24px;
+    text-align:center;
+}
+#topology{
+    width:60%;
+    height: 60%;
+    float:left;
+    padding:10px;
+}
+#topology-pane{
+    height:700;
+}
+#topology-graph {
+    border: 1px solid #000000;
 }
 
 .node {
@@ -27,4 +52,3 @@
 .port text {
     font-size: 10px;
 }
-

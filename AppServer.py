@@ -43,7 +43,7 @@ class TrafficControlController(ControllerBase):
         path = "%s/html/" % PATH
         self.static_app = DirectoryApp(path)
 
-    @route('topology', '/{filename:(js/\w+.js|css/\w+.css|.?)}')
+    @route('topology', '/{filename:(.+\.svg$|.+\.js$|.+\.css$|.+\.html$|.?)}')
     def static_handler(self, req, **kwargs):
         if kwargs['filename']:
             print(kwargs['filename'])

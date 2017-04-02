@@ -1,3 +1,11 @@
+function trim_zero(obj) {
+    return String(obj).replace(/^0+/, "");
+}
+
+function dpid_to_int(dpid) {
+    return Number("0x" + dpid);
+}
+
 var CONF = {
     image: {
         width: 50,
@@ -8,6 +16,37 @@ var CONF = {
         height: 500,
         dist: 200,
         charge: -600
+    },
+    fillstatTableTemp:function(data){
+        var pagefn = doT.template(document.getElementById('statTableTemp').text, undefined, {});
+	    document.getElementById('statetableWrap').innerHTML = pagefn(data)
+    },
+    onNodeDBClick:function(d){
+
+        d3.select(this).classed("fixed", d.fixed = false);
+
+        dpid = "" + dpid_to_int(d.dpid)
+
+
+        resp_data = { dpid: dpid,};
+        $.get("/stats/desc/"+dpid,{},function( data, status){
+            if( "success" == status){
+
+                resp_data["dp_desc"] = data[dpid]["dp_desc"];
+                resp_data["sw_desc"] = data[dpid]["sw_desc"];
+                resp_data["hw_desc"] = data[dpid]["hw_desc"];
+                resp_data["serial_num"] = data[dpid]["serial_num"];
+                resp_data["mfr_desc"] = data[dpid]["mfr_desc"];
+            }
+
+            $.get("/stats/port/"+dpid,{},function( data, status){
+                if( "success" == status){
+                    resp_data["port_count"] = data[dpid].length;
+                }
+                CONF.fillstatTableTemp(resp_data);
+            });
+
+        });
     }
 };
 
@@ -21,27 +60,19 @@ ws.onmessage = function(event) {
     this.send(JSON.stringify(ret));
 }
 
-function trim_zero(obj) {
-    return String(obj).replace(/^0+/, "");
-}
-
-function dpid_to_int(dpid) {
-    return Number("0x" + dpid);
-}
-
 var elem = {
     force: d3.layout.force()
         .size([CONF.force.width, CONF.force.height])
         .charge(CONF.force.charge)
         .linkDistance(CONF.force.dist)
         .on("tick", _tick),
-    svg: d3.select("#topo").append("svg")
-        .attr("id", "topology")
+    svg: d3.select("#topology-pane").append("svg")
+        .attr("id", "topology-graph")
         .attr("width", CONF.force.width)
         .attr("height", CONF.force.height),
-    console: d3.select("#topo").append("div")
-        .attr("id", "console")
-        .attr("width", CONF.force.width)
+//    console: d3.select("#topology-pane").append("div")
+//        .attr("id", "console")
+//        .attr("width", CONF.force.width)
 };
 function _tick() {
     elem.link.attr("x1", function(d) { return d.source.x; })
@@ -59,15 +90,15 @@ function _tick() {
 elem.drag = elem.force.drag().on("dragstart", _dragstart);
 function _dragstart(d) {
     var dpid = dpid_to_int(d.dpid)
-    d3.json("/stats/flow/" + d.dpid, function(e, data) {
-        flows = data[dpid];
-        console.log(flows);
-        elem.console.selectAll("ul").remove();
-        li = elem.console.append("ul")
-            .selectAll("li");
-        li.data(flows).enter().append("li")
-            .text(function (d) { return JSON.stringify(d, null, " "); });
-    });
+//    d3.json("/stats/flow/" + d.dpid, function(e, data) {
+//        flows = data[dpid];
+//        console.log(flows);
+//        elem.console.selectAll("ul").remove();
+//        li = elem.console.append("ul")
+//            .selectAll("li");
+//        li.data(flows).enter().append("li")
+//            .text(function (d) { return JSON.stringify(d, null, " "); });
+//    });
     d3.select(this).classed("fixed", d.fixed = true);
 }
 elem.node = elem.svg.selectAll(".node");
@@ -89,17 +120,10 @@ elem.update = function () {
     this.node.exit().remove();
     var nodeEnter = this.node.enter().append("g")
         .attr("class", "node")
-        .on("click",
-            function(d){
-                alert(d.dpid);
-            })
-        .on("dblclick",
-            function(d) {
-                d3.select(this).classed("fixed", d.fixed = false);
-            })
+        .on("dblclick",CONF.onNodeDBClick)
         .call(this.drag);
     nodeEnter.append("image")
-        .attr("xlink:href", "./router.svg")
+        .attr("xlink:href", "/res/router.svg")
         .attr("x", -CONF.image.width/2)
         .attr("y", -CONF.image.height/2)
         .attr("width", CONF.image.width)
@@ -284,6 +308,9 @@ function initialize_topology() {
 
 function main() {
     initialize_topology();
+
+    CONF.fillstatTableTemp({});
+
 }
 
 main();
