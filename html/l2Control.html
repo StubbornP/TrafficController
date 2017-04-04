@@ -1,0 +1,117 @@
+<meta charset="utf-8">
+<div id="container">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.0.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/l2Control.css">
+
+    <script id="portListTemp" type="text/x-dot-template">
+        <ul class="list-group">
+            {{~it.data:value:index}}
+                <li class="list-group-item" onclick="Callbacks['refresh_port_info']({{=index}})">接口{{=value.port_no}}</li>
+            {{~}}
+        </ul>
+    </script>
+
+    <script id="portInfotableTemp" type="text/x-dot-template">
+        <!-- Default panel contents -->
+        <div class="portConfigPanelHeading panel-heading">
+            接口信息
+            <button type="button" class="btn btn-primary" onclick="Callbacks['refresh_port_info'](Callbacks['port']);">
+                <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="panel-body"></div>
+        <table id="portInfoTable" class="table">
+            <tr>
+                <td>接口号</td><td>{{=it.port_no || "    "}}</td>
+                <td>链路类型</td><td>ETHERNET</td>
+            </tr>
+
+            <tr>
+                <td>MAC 地址</td><td>{{=it.hw_addr || "    "}}</td>
+                <td>Name  </td><td>{{=it.port_name || "    "}}</td>
+            </tr>
+            <tr>
+                <td>Rx字节数</td><td>{{=it.rx_bytes}}</td>
+                <td>Tx字节数</td><td>{{=it.tx_bytes}}</td>
+
+            </tr>
+            <tr>
+                <td>Rx包数量</td><td>{{=it.rx_packets}}</td>
+                <td>Tx包数量</td><td>{{=it.tx_packets}}</td>
+            </tr>
+            <tr>
+                <td>Rx Error</td><td>{{=it.rx_errors}}</td>
+                <td>Tx Error</td><td>{{=it.tx_errors}}</td>
+            </tr>
+            <tr>
+                <td>Rx Dropped</td><td>{{=it.rx_dropped}}</td>
+                <td>Tx Dropped</td><td>{{=it.tx_dropped}}</td>
+            </tr>
+
+            <tr>
+                <td>Rx Frame Error</td><td>{{=it.rx_frame_err}}</td>
+                <td>Rx CRC Error</td><td>{{=it.rx_crc_err}}</td>
+            </tr>
+            <tr>
+                <td>Rx Over Error</td><td>{{=it.rx_over_err}}</td>
+                <td>Collisions</td><td>{{=it.collisions}}</td>
+            </tr>
+
+        </table>
+    </script>
+
+    <div id="nav" class="panel panel-default">
+        <div id ="portTableCaption" class="panel-heading">接口表</div>
+        <div class="panel-body">
+            <div style="height: 50px">
+                <div class="input-group">
+                    <input id="switchSearchInput" type="text" class="form-control" placeholder="交换机ID">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" onclick="Callbacks['switch_search_click']()">
+                            <span class="glyphicon glyphicon-search" />
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div id="interface-list-warp" >
+            </div>
+            </div>
+    </div>
+    <div id="portConfig-warp" class="panel panel-default">
+        <div class="panel-heading">接口配置</div>
+        <div id="portConfig-pane" class="panel-body">
+            <div id="portInfo" class="panel panel-default">
+            </div>
+            <div id="portConfig" class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="portConfigPanelHeading panel-heading">接口控制
+                    <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                    <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                </div>
+                <div class="panel-body"></div>
+                <table id="portConfigTable" class="table">
+                    <tr>
+                        <th width="50px">编号</th>
+                        <th width="50px">接口</th>
+                        <th>描述</th>
+                        <td width="100px">操作</td>
+                    </tr>
+                    <tr>
+                        <td>1</td><td>0</td><td>针对小包发包量的限制策略</td>
+                        <td>
+                            <button type="button" class="btn btn-info" ><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button>
+                            <button type="button" class="btn btn-danger" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="/js/d3.v3.min.js" charset="utf-8"></script>
+    <script src="/js/doT.min.js" crossorigin="anonymous"></script>
+    <script src="/js/l2Control.js" charset="utf-8"></script>
+</div>

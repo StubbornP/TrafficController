@@ -1,0 +1,28 @@
+#nav {
+    line-height:30px;
+    background-color:#eeeeee;
+    height:95px;
+    width:15%;
+    float:left;
+    padding:5px;
+}
+#portTable {
+    width:95%;
+}
+#portTableCaption{
+    font-family:黑体;
+    font-size:24px;
+    text-align:center;
+}
+#portConfig-warp{
+    width:60%;
+    height: 60%;
+    float:left;
+    padding:10px;
+}
+.portConfigPanelHeading{
+    font-size: 24px;
+}
+#portConfig-pane{
+    background-color: azure;
+}

@@ -1,0 +1,16 @@
+#mainFrame{
+    width: 99%;
+    height: 800px;
+    border: hidden;
+}
+#footer {
+    background-color: #c8da7f;
+    color: #776fff;
+    font-family: 黑体;
+    clear:both;
+    text-align:center;
+    padding:5px;
+}
+#messageBox{
+
+}

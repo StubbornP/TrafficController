@@ -1,0 +1,28 @@
+#nav {
+    line-height:30px;
+    background-color:#eeeeee;
+    height:95px;
+    width:15%;
+    float:left;
+    padding:5px;
+}
+#vlanTable {
+    width:95%;
+}
+#vlanTableCaption{
+    font-family:黑体;
+    font-size:24px;
+    text-align:center;
+}
+#vlanConfig-warp{
+    width:60%;
+    height: 60%;
+    float:left;
+    padding:10px;
+}
+.vlanConfigPanelHeading{
+    font-size: 21px;
+}
+#vlanConfig-pane{
+    background-color: azure;
+}
